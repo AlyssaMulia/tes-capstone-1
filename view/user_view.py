@@ -1,5 +1,5 @@
 from Controller.ControllerAccount import Account
-from Controller.ControllerWisata import WisataController
+# from Controller.ControllerWisata import WisataController
 from Controller.ControllerBookmark import BookmarkController
 from Controller.ControllerLinkedList import LinkedList
 from Model.Database import Database
@@ -14,7 +14,7 @@ linked_list = LinkedList()
 db.connect()
 
 bookmark_controller = BookmarkController()
-wisata_controller = WisataController(db)
+# wisata_controller = WisataController(db)
 
 def menu_user():
     while True :
@@ -136,13 +136,17 @@ def menu_pengunjung(id_user):
                     print("|        CARI TEMPAT WISATA       |")
                     print("====================================")
                     search_query = input("Masukan nama atau lokasi wisata: ")
-                    wisata_controller.search_wisata(search_query)
+                    pass
+
                 elif opsi == '2':
                     os.system('cls')
                     print("====================================")
                     print("|        LIHAT TEMPAT WISATA       |")
                     print("====================================")
-                    wisata_controller.get_wisata()
+                    linked_list.refresh()
+                    linked_list.lihat_wisata()
+                    input("Tekan enter untuk kembali ...")
+                    os.system('cls')
                     
                 elif opsi == '3':
                     os.system('cls')
@@ -153,9 +157,9 @@ def menu_pengunjung(id_user):
                     print(" [2] Urutkan berdasarkan nama wisata Z-A")
                     pilih = int(input("Pilih menu (1/2): "))
                     if pilih == 1:
-                        wisata_controller.show_sorted_wisata_ascending()
+                        pass
                     elif pilih ==2:
-                        wisata_controller.show_sorted_wisata_descending()
+                        pass
                     else:
                         print("Opsi tidak tersedia!")
 
@@ -172,7 +176,8 @@ def menu_pengunjung(id_user):
                     elif pilih == 2:
                         bookmark = input("apakah ingin menambahkan ke bookmark? (y/t) : ").lower()
                         if bookmark == 'y' :
-                            wisata_controller.get_wisata()
+                            linked_list.refresh()
+                            linked_list.lihat_wisata()
                             wisata_bookmark = input("masukkan nama wisata yang ingin ditambahkan ke bookmark : ").capitalize()
                             b = BookmarkController()
                             result = b.find_bookmark (wisata_bookmark)
@@ -183,7 +188,7 @@ def menu_pengunjung(id_user):
                             else:
                                 print(f"wisata {wisata_bookmark} tidak ditemukan")
                         elif bookmark == 't' :
-                            menu_pengunjung()
+                            menu_pengunjung(id_user)
                             break
                         else :
                             print("Opsi tidak tersedia!")
@@ -198,7 +203,6 @@ def menu_pengunjung(id_user):
 
                 elif opsi == '6':
                     menu_user()
-
                 else:
                     print("Opsi tidak tersedia!")
 
