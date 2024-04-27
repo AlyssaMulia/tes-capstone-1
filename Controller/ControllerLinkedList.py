@@ -1,87 +1,51 @@
 from Model.Database import Database
 from Model.Wisata import Wisata
-
+from prettytable import PrettyTable
 import os
-
-db = Database()
 
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
 
-class LinkedList:
+class LinkedList():
     def __init__(self):
         self.head = None
-    
-    def add_wisata(self, nama_wisata, deskripsi, lokasi):
-        Wisata_baru = Wisata(nama_wisata, deskripsi, lokasi)
-        if self.head is None:
-            self.head = Wisata_baru
-            self.tail = Wisata_baru
-        else:
-            Wisata_baru.previous = self.tail
-            self.tail.next = Wisata_baru
-            self.tail = Wisata_baru
+        self.tail = None
 
-    def find_wisata(self, nama_wisata):
-        current = self.head
-        while current:
-            if current.nama_wisata == nama_wisata:
-                return current
-            current = current.next
-        return None
-    
-    def get_wisata(self):
-        data_wisata = db.get_wisata()
-
-    def refresh(self):
-        self.reset()
-        result = self.get_wisata()
-        for i in result:
-            # Memasukan data kedalam node
-            self.add_wisata(i[0], i[1], i[2], i[3])
-
-    def reset(self):
-        # Mengembalikan self.head menjadi None
+    def reset_data(self):
         self.head = None
 
-    def display(self):
-        self.refresh()
-        a = self.head
-        if a is not None:
-            print(f"ID Wisata : "[0], 
-                   "Nama Wisata : "[1], 
-                   "Deskripsi: "[2],
-                   "Lokasi: "[3])
-            
-    def merge_sort(self, wisata, sort_by, ascending):
-        if len(wisata) > 1:
-            mid = len(wisata) // 2
-            left_half = wisata[:mid]
-            right_half = wisata[mid:]
+    def refresh(self):
+        self.reset_data()
+        results = self.get_data()
+        for result in results:
+            id_wisata = result ["ID_Wisata"]
+            nama_wisata = result ["Nama_Wisata"]
+            deskripsi = result["Deskripsi"]  # Misalnya, deskripsi berada di indeks ke-1 dalam tuple
+            lokasi = result["Lokasi"]     # Misalnya, lokasi berada di indeks ke-2 dalam tuple
+            self.add_wisata(id_wisata, nama_wisata, deskripsi, lokasi)
 
-            self.merge_sort(left_half, sort_by)
-            self.merge_sort(right_half, sort_by)
+    def get_data(self):
+        db = Database()
+        return db.get_wisata()
 
-            i = 0
-            j = 0
-            k = 0
+    def lihat_wisata(linked_list):
+        current_node = linked_list.head
+        while current_node:
+            print("ID         :", current_node.id_wisata)
+            print("Nama Wisata:", current_node.nama_wisata)
+            print("Deskripsi  :", current_node.deskripsi)
+            print("Lokasi     :", current_node.lokasi)
+            print("--------------------------------------------------------------")
+            current_node = current_node.next
 
-            while i < len(left_half) and j < len(right_half):
-                if sort_by == 'name':
-                    if ascending:
-                        if left_half[i].nama_wisata < right_half[j].nama_wisata:
-                            wisata[k] = left_half[i]
-                            i += 1
-                        else:
-                            wisata[k] = right_half[j]
-                            j += 1
-                    else:
-                        if left_half[i].nama_wisata > right_half[j].nama_wisata:
-                            wisata[k] = left_half[i]
-                            i += 1
-                        else:
-                            wisata[k] = right_half[j]
-                            j += 1
-        return wisata
+    def add_wisata(self, id_wisata, nama_wisata, deskripsi, lokasi):
+        wisata_baru = Wisata(id_wisata, nama_wisata, deskripsi, lokasi)
+        if self.head is None:
+            self.head = wisata_baru
+            self.tail = wisata_baru
+        else:
+            wisata_baru.previous = self.tail
+            self.tail.next = wisata_baru
+            self.tail = wisata_baru
