@@ -1,5 +1,6 @@
 from Model import Database
 from Model.Database import Database
+from prettytable import PrettyTable
 
 class Account():
 
@@ -17,4 +18,17 @@ class Account():
         return self.model.find_nama_id(nama_user, id_user)
     
     def find_admin(self, username, password):
+        # Panggil metode find_admin dari ModelDatabase untuk mencari admin
         return self.model.find_admin(username, password)
+
+    def find_profil(self, id_user):
+        pengunjung = self.model.find_profil(id_user)
+        if pengunjung:
+            profil_tabel = PrettyTable(["ID Pengunjung", "Nama", "Jenis Kelamin", "Usia"])
+            profil_tabel.title = "Profil Pengunjung"
+            profil_tabel.add_row([pengunjung["ID_Pengunjung"], pengunjung["Nama_Pengunjung"], pengunjung["Jenis_Kelamin"], pengunjung["Umur"]])
+            print(profil_tabel)
+        else:
+            print("Pengunjung tidak ditemukan.")
+
+            
