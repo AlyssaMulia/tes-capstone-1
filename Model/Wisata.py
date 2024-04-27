@@ -6,17 +6,3 @@ class Wisata: #Node untuk menyimpan data tempat wisata
         self.lokasi = lokasi
         self.next = None
         self.previous = None
-
-class ListWisata:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-        self.history = []
-
-    def __len__(self):
-        count = 0
-        current = self.head
-        while current:
-            count += 1
-            current = current.next
-        return count
