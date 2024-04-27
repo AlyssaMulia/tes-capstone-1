@@ -2,7 +2,7 @@ import mysql.connector
 
 class Database:
     def __init__(self):
-        self.connection = None
+        self.connect()
 
     def connect(self):
         self.connection = mysql.connector.connect(
@@ -50,70 +50,16 @@ class Database:
 
         myCursor = self.connection.cursor() 
         myCursor.execute(query, values) 
-
-        self.connection.commit()
-
-        return myCursor.lastrowid
-
-    def add_wisata(self, nama_wisata, lokasi, deskripsi):
-        query = "INSERT INTO Wisata (ID_Wisata, Nama_Wisata, Deskripsi, Lokasi) VALUES (NULL, %s, %s, %s)"
-        values = (nama_wisata, lokasi, deskripsi)
-        
-        myCursor = self.connection.cursor()
-        myCursor.execute(query, values)
-        
         self.connection.commit()
 
         return myCursor.lastrowid
 
     def get_wisata(self):
-        myCursor = self.connection.cursor()
+        myCursor = self.connection.cursor(dictionary=True)
         query = "SELECT * FROM Wisata"
         myCursor.execute(query)
-
-        return myCursor.fetchall() 
-    
-    def update_wisata(self, id_wisata,  nama_wisata=None, lokasi=None, deskripsi=None):
-        query = "UPDATE Wisata SET Nama_Wisata = %s, Lokasi = %s, Deskripsi = %s WHERE ID_Wisata = %s"
-        values = (nama_wisata, lokasi, deskripsi, id_wisata)
-        
-        myCursor = self.connection.cursor()
-        myCursor.execute(query, values)
-        
-        self.connection.commit() 
-    
-    def delete_wisata(self, id_wisata):
-        query = "DELETE FROM Wisata WHERE ID_Wisata = %s"
-        values = (id_wisata,)
-        
-        myCursor = self.connection.cursor()
-        myCursor.execute(query, values)
-        
-        self.connection.commit()
-    
-    def search_wisata(self, search_query):
-        myCursor = self.connection.cursor()
-        query = "SELECT * FROM Wisata WHERE Nama_Wisata LIKE %s OR Lokasi LIKE %s OR Deskripsi LIKE %s"
-        values = ('%' + search_query + '%', '%' + search_query + '%')
-        myCursor.execute(query, values)
-        
         return myCursor.fetchall()
 
-    # def get_sorted_wisata_ascending(self):
-    #     myCursor = self.connection.cursor()
-    #     query = "SELECT * FROM Wisata ORDER BY Nama_Wisata ASC"
-    #     myCursor.execute(query)
-        
-    #     return myCursor.fetchall()
-    
-    # def get_sorted_wisata_descending(self):
-    #     myCursor = self.connection.cursor()
-    #     query = "SELECT * FROM Wisata ORDER BY Nama_Wisata DESC"
-    #     myCursor.execute(query)
-        
-    #     return myCursor.fetchall()
-    
-# Di dalam method tambah_bookmark di model Database
     def tambah_bookmark(self, tanggal_sekarang, wisata_bookmark, id_user):
         myCursor = self.connection.cursor()
         query = "INSERT INTO Bookmark (Tanggal_Ditandai, Destinasi_Wisata, ID_Pengunjung) VALUES (%s, %s, %s)"
@@ -128,8 +74,21 @@ class Database:
         return myCursor.fetchall()
     
     def find_profil(self, id_user):
-        myCursor = self.connection.cursor(dictionary=True)
+        myCursor = self.connection.cursor()
         query = "SELECT * FROM Pengunjung WHERE ID_Pengunjung = %s"
         myCursor.execute(query, (id_user,))
         pengunjung = myCursor.fetchone()
         return pengunjung
+    
+    def lihat_sponsor(self):
+        myCursor = self.connection.cursor()
+        query = "SELECT * FROM Sponsor"
+        myCursor.execute(query)
+        return myCursor.fetchall()
+
+    def tambah_sponsor (self, jenis, kontak, alamat, bentuk):
+        myCursor = self.connection.cursor()
+        query = "INSERT INTO Sponsor (Jenis_Sponsor, Kontak, Alamat, Bentuk_Sponsor) VALUES (%s, %s, %s, %s)"
+        values = (jenis, kontak, alamat, bentuk)
+        myCursor.execute(query, values)
+        self.connection.commit()
