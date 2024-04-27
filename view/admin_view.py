@@ -1,11 +1,16 @@
 from Controller.ControllerAccount import Account
+from Controller.ControllerWisata import WisataController
 from Controller.ControllerLinkedList import LinkedList
+from Model.Database import Database
 from View import user_view
 from View import main_view
 import os
 
-ll = LinkedList()
 acc = Account()
+db = Database()
+db.connect()
+wisata_controller = WisataController(db)
+wisata_linkedlist = LinkedList()
 
 def login_admin():
     while True :
@@ -45,36 +50,79 @@ def menu_admin():
                 print("|         8. keluar                |")
                 print("|                                  |")
                 print("+----------------------------------+")
-                opsi = str(input("Pilih opsi anda (1/2/3/4/5): "))
+                opsi = str(input("Pilih opsi anda (1/2/3/4/5/6/7/8): "))
 
                 if opsi == '1':
                     os.system('cls')
-                    pass
+                    print("====================================")
+                    print("|       TAMBAH TEMPAT WISATA       |")
+                    print("====================================")
+                    nama_wisata = input("Masukan nama tempat wisata : ")
+                    lokasi = input("Masukan lokasi tempat wisata : ")
+                    deskripsi = input("Masukan deskripsi tempat wisata : ")
+                    wisata_controller.add_wisata(nama_wisata, lokasi, deskripsi)
+                    print("Tempat wisata telah ditambahkan!")
+
                 elif opsi == '2':
                     os.system('cls')
-                    ll.tampilkan_wisata()
+                    print("====================================")
+                    print("|        LIHAT TEMPAT WISATA       |")
+                    print("====================================")
+                    wisata_controller.get_wisata()
+
                 elif opsi == '3':
                     os.system('cls')
-                    pass
+                    print("====================================")
+                    print("|        EDIT TEMPAT WISATA        |")
+                    print("====================================")
+                    id_wisata = input("Masukan ID tempat wisata : ")
+                    nama_wisata = input("Masukan nama tempat wisata baru (Kosongkan untuk tidak merubah nama) : ")
+                    lokasi = input("Masukan lokasi tempat wisata baru (Kosongkan untuk tidak merubah lokasi) : ")
+                    deskripsi = input("Masukan deskripsi tempat wisata baru (Kosongkan untuk tidak merubah deskripsi) : ")
+                    wisata_controller.update_wisata(id_wisata, nama_wisata, lokasi, deskripsi)
+
                 elif opsi == '4':
                     os.system('cls')
-                    pass
+                    print("====================================")
+                    print("|        HAPUS TEMPAT WISATA       |")
+                    print("====================================")
+                    id_wisata = input("Masukan ID tempat wisata yang ingin dihapus: ")
+                    wisata_controller.delete_wisata(id_wisata)
+                    print("Tempat wisata telah dihapus!")
+
                 elif opsi == '5':
-                    pass
+                    os.system('cls')
+                    print("====================================")
+                    print("|        CARI TEMPAT WISATA        |")
+                    print("====================================")
+                    search_query = input("Masukan nama atau lokasi wisata: ")
+                    wisata_controller.search_wisata(search_query)
+
                 elif opsi == '6':
-                    pass
+                    os.system('cls')
+                    print("====================================")
+                    print("|       URUTKAN TEMPAT WISATA      |")
+                    print("====================================")
+                    print(" [1] Urutkan berdasarkan nama wisata A-Z")
+                    print(" [2] Urutkan berdasarkan nama wisata Z-A")
+                    pilih = int(input("Pilih menu (1/2): "))
+                    if pilih == 1:
+                        wisata_data = wisata_linkedlist.get_wisata()
+                        sorted_wisata = wisata_linkedlist.merge_sort(wisata_data, 'name', ascending=True)
+                    elif pilih ==2:
+                        wisata_linkedlist.merge_sort("name", descending=False)
+                    else:
+                        print("Opsi tidak tersedia!")
+
                 elif opsi == '7':
+                    print("====================================")
+                    print("|          HUBUNGI SPONSOR         |")
+                    print("====================================")
                     pass
                 elif opsi == '8':
-                    pass
+                    break
                 else:
                     print("Opsi tidak tersedia!")
 
         except KeyboardInterrupt:
             print("\nTerjadi Kesalahan!")
-
-def create():
-    print("====================================")
-    print("|       TAMBAH TEMPAT WISATA       |")
-    print("====================================")
-    
